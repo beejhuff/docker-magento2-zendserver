@@ -22,18 +22,18 @@ docker run --env BASE_URL="magento2.lan" --env TOKEN_GITHUB="#my_token_github#" 
 </pre>
 
 Don't forget :
-> to change the "magento.lan" for the url you want to use with magento2 and to access to ZendServer.
-> to change #my_token_github# by your key (public github account key) to avoid the "Could not authenticate against github.com" Error in case of too many deployments.
+   To change the "magento.lan" for the url you want to use with magento2 and to access to ZendServer.
+   To change #my_token_github# by your key (public github account key) to avoid the "Could not authenticate against github.com" Error in case of too many deployments.
 
 
  - 4) Change your host to manage the url with the good IP on your computer:
 At the end of the run you will see this message (then you can have the IP of your container):
 <pre>
- * Starting web server apache2
+Starting web server apache2
 AH00558: apache2: Could not reliably determine the server's fully qualified domain name, using 172.17.0.18
 </pre>
 
-Eedit /etc/hosts like that :
+Edit /etc/hosts like that :
 <pre>
 172.17.0.18 magento2.lan
 </pre>
