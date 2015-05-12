@@ -1,4 +1,4 @@
-# magento2-docker-for-development
+# docker-magento2-zendserver
 The magento2 docker files i use to have a Magento2 / Zend-Server / Docker Environment
 
 You should have the file ZendServer-8.0.2-RepositoryInstaller-linux.tar.gz (download it here :  www.zend.com) at the root of the directory (same level as the Dockerfile).
