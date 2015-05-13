@@ -74,7 +74,7 @@ php -f bin/magento setup:install \
 
 echo '--Installation des samples data--' 
 cd /var/www/magento2 && composer update
-#cd /var/www/magento2 && php dev/tools/Magento/Tools/SampleData/install.php --admin_username=admin
+cd /var/www/magento2 && php dev/tools/Magento/Tools/SampleData/install.php --admin_username=admin
 cd /var/www/magento2 && php dev/tools/Magento/Tools/View/deploy.php
 cd /var/www/magento2 && php dev/shell/cache.php --flush
 
