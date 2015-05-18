@@ -1,46 +1,22 @@
-# docker-magento2-zendserver
-The magento2 docker files i use to have a Magento2 / Zend-Server / Docker Environment
+#Magento2 & Zendserver docker container
 
-To use it :
-- 1) Git clone the project
-<pre>
-git clone https://github.com/pierrefay/docker-magento2-zendserver.git
-</pre>
+- 1) Build your container :
+./build.sh
 
-- 2) Build the image 
-<pre>
-docker  build -t pierrefay/magento2-zendserver .
-</pre>
+- 2) start your container :
+./run-server.sh \<instance_name\> \<token_github\>
 
-- 3) Run an instance:
-<pre>
-docker stop magento2-zendserver
-docker rm magento2-zendserver
-docker run --env BASE_URL="magento2.lan" --env TOKEN_GITHUB="#my_token_github#" -v /data/magento2-zendserver/html:/var/www/magento2 --name magento2-zendserver -p 80:80 -p 10081:10081 -p 10082:10082 pierrefay/magento2-zendserver
-</pre>
+The \<instance_name\> will be your docker container name. It will be use for the magento installation : http://www. \<instance_name\> .lan/
+The script will add the host (www. \<instance_name\> .lan) automatically into /etc/hosts
 
-Don't forget :
+\<token_github\> is your public github token, if you run too many time the container github will block the script installation because of too many anonymous requests.
+it will allow you to avoid the "Could not authenticate against github.com" error in case of too many deployments.
 
-To change the "magento.lan" for the url you want to use with magento2 and to access to ZendServer.
+Be carefull to not have an apache2 or mysql running in the same  time (the ports 80 et 3306 must be free).
 
-To change #my_token_github# by your key (public github account key) to avoid the "Could not authenticate against github.com" error in case of too many deployments.
+- 3) Where can i edit the files ?
 
+Once started the file will be in the folder /data/\<instance_name\>/
+- The database file will be in /data/\<instance_name\>/mysql/
+- The magento file will be in /data/\<instance_name\>/html/
 
- - 4) Change your host to manage the url with the good IP on your computer:
-At the end of the run you will see this message (then you can have the IP of your container):
-<pre>
-Starting web server apache2
-AH00558: apache2: Could not reliably determine the server's fully qualified domain name, using 172.17.0.18
-</pre>
-
-Edit /etc/hosts like that :
-<pre>
-172.17.0.18 magento2.lan
-</pre>
-
-If you want to have the IP you can also run this command :
-<pre>
-CONTAINER_ID=$(docker ps | grep "$TAG "| awk 'magento2-zendserver')
-IP=$(docker inspect --format '{{ .NetworkSettings.IPAddress }}' $CONTAINER_ID)
-echo "Ip of $TAG: $IP"
-</pre>

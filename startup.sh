@@ -1,6 +1,5 @@
 #!/bin/bash
-echo '----debut du startup'
-echo '--Téléchargement des fichiers de magento2--' 
+echo 'Downloading magento2...' 
 echo $BASE_URL
 
 export PATH=/usr/local/zend/bin:$PATH
@@ -17,15 +16,15 @@ then
 else
 	echo 'Directory magento2 not empty, skiping installation'
 fi
-echo '--Modifications des ACL des fichiers de magento2--' 
+echo 'changing ACL for magento2 files...' 
 chmod 777 -R /var/www/magento2/var 
 chmod 777 -R /var/www/magento2/pub
 chmod 777 -R /var/www/magento2/app/etc
 
-echo '--redémarrage du service apache--' 
+echo 'starting mysql service...'
 /usr/sbin/service mysql start
 
-echo '--configuration de l utilisateur de la base de donnée--' 
+echo 'user configuration in the database...' 
 MYSQL_ROOT_PASSWORD=""
 SECURE_MYSQL=$(expect -c "
 set timeout 10
@@ -47,15 +46,15 @@ expect eof
 
 echo "$SECURE_MYSQL" 
 
-echo '--redémarrage du service apache--' 
+echo 'reboot apache service...' 
 /usr/sbin/service zend-server restart 
 
-echo '--création de la base de donnée magento2--' 
+echo '--creating database...' 
 echo "CREATE DATABASE IF NOT EXISTS magento2" > /createdb.sql
 mysql < /createdb.sql
 export hostIP=$(host HOST_HOSTNAME | awk '/has address/ { print $4 }')
 
-echo '--Installation de magento2--' 
+echo '--Installation...' 
 php -f bin/magento setup:install \
     --base_url="http://$BASE_URL/"  \
     --backend_frontname=admin \
@@ -79,5 +78,6 @@ cd /var/www/magento2 && php dev/tools/Magento/Tools/View/deploy.php
 cd /var/www/magento2 && php dev/shell/cache.php --flush
 
 service zend-server restart
-echo '--fin du startup--' 
-tail -f /var/log/apache2/access.log
+echo '...end of the startup !' 
+
+tail -f /var/log/apache2/*.log > /var/www/html/logs-server.log
