@@ -1,6 +1,7 @@
 #!/bin/bash
 echo 'Downloading magento2...' 
 echo $BASE_URL
+echo $TOKEN_GITHUB
 
 export PATH=/usr/local/zend/bin:$PATH
 source /etc/zce.rc
@@ -20,6 +21,11 @@ echo 'changing ACL for magento2 files...'
 chmod 777 -R /var/www/magento2/var 
 chmod 777 -R /var/www/magento2/pub
 chmod 777 -R /var/www/magento2/app/etc
+
+if [ ! -f /usr/share/mysql/my-default.cnf ] ; then
+     cp /etc/mysql/my.cnf /usr/share/mysql/my-default.cnf
+fi 
+mysql_install_db
 
 echo 'starting mysql service...'
 /usr/sbin/service mysql start
@@ -52,7 +58,6 @@ echo 'reboot apache service...'
 echo '--creating database...' 
 echo "CREATE DATABASE IF NOT EXISTS magento2" > /createdb.sql
 mysql < /createdb.sql
-export hostIP=$(host HOST_HOSTNAME | awk '/has address/ { print $4 }')
 
 echo '--Installation...' 
 php -f bin/magento setup:install \
@@ -69,7 +74,6 @@ php -f bin/magento setup:install \
     --language=fr_FR \
     --currency=EUR \
     --timezone=Europe/Paris
-    --use_sample_data
 
 echo '--Installation des samples data--' 
 cd /var/www/magento2 && composer update
